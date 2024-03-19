@@ -34,17 +34,17 @@ public class InventoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> get(@PathVariable("id") String id){
-        return new ResponseEntity<>(inventoryService.get(id), HttpStatus.CREATED);
+        return new ResponseEntity<>(inventoryService.get(id), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<Object> getAll(){
-        return new ResponseEntity<>(inventoryService.getAll(), HttpStatus.CREATED);
+        return new ResponseEntity<>(inventoryService.getAll(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") String id){
-        return new ResponseEntity<>(inventoryService.delete(id), HttpStatus.CREATED);
+        return new ResponseEntity<>(inventoryService.delete(id), HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{id}")
