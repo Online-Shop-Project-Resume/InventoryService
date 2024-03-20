@@ -29,6 +29,7 @@ public class InventoryServiceImpl implements InventoryService{
 
     @Override
     public InventoryResponse add(InventoryRequest inventoryRequest) {
+        log.info("Inventory add: {}", inventoryRequest);
         Inventory inventory = InventoryRequestMapper.toInventory(inventoryRequest);
         inventory = inventoryRepository.save(inventory);
         return InventoryResponseMapper.toInventoryResponse(inventory);
@@ -36,18 +37,21 @@ public class InventoryServiceImpl implements InventoryService{
 
     @Override
     public InventoryResponse get(String id) {
+        log.info("Inventory get by id: {}", id);
         Inventory inventory = inventoryRepository.findById(id).orElseThrow(()->new NotFoundException("Inventory with id: "+ id + "is not found"));
         return InventoryResponseMapper.toInventoryResponse(inventory);
     }
 
     @Override
     public List<InventoryResponse> getAll() {
+        log.info("Inventory get all");
         List<Inventory> inventoryList = inventoryRepository.findAll();
         return inventoryList.stream().map(InventoryResponseMapper::toInventoryResponse).toList();
     }
 
     @Override
     public InventoryResponse update(String id, InventoryRequest inventoryRequest) {
+        log.info("Inventory update by id: {}, InventoryRequest: {}", id, inventoryRequest);
         Inventory inventory = InventoryRequestMapper.toInventory(inventoryRequest);
         inventory.setId(id);
 
@@ -57,6 +61,7 @@ public class InventoryServiceImpl implements InventoryService{
 
     @Override
     public Boolean delete(String id) {
+        log.info("Inventory delete by id: {}", id);
         inventoryRepository.deleteById(id);
         return true;
     }
