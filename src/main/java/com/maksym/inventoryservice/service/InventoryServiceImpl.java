@@ -4,10 +4,11 @@ import com.maksym.inventoryservice.dto.InventoryRequest;
 import com.maksym.inventoryservice.dto.InventoryResponse;
 import com.maksym.inventoryservice.dtoMapper.InventoryRequestMapper;
 import com.maksym.inventoryservice.dtoMapper.InventoryResponseMapper;
+import com.maksym.inventoryservice.exception.EntityNotFoundException;
 import com.maksym.inventoryservice.model.Inventory;
 import com.maksym.inventoryservice.repository.InventoryRepository;
-import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class InventoryServiceImpl implements InventoryService{
     @Override
     public InventoryResponse get(String id) {
         log.info("Inventory get by id: {}", id);
-        Inventory inventory = inventoryRepository.findById(id).orElseThrow(()->new NotFoundException("Inventory with id: "+ id + "is not found"));
+        Inventory inventory = inventoryRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Inventory with id: "+ id + "is not found"));
         return InventoryResponseMapper.toInventoryResponse(inventory);
     }
 
