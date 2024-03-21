@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class InventoryServiceTest {
+public class ProductServiceTest {
 
     private final String id1 = "1";
     private final String id2 = "2";
