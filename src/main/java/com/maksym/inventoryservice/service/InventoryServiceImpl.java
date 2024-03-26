@@ -8,8 +8,8 @@ import com.maksym.inventoryservice.exception.EntityNotFoundException;
 import com.maksym.inventoryservice.feignClient.ProductService;
 import com.maksym.inventoryservice.model.Inventory;
 import com.maksym.inventoryservice.repository.InventoryRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +19,11 @@ import java.util.List;
 public class InventoryServiceImpl implements InventoryService{
 
     private final InventoryRepository inventoryRepository;
-    private final KafkaTemplate kafkaTemplate;
     private final ProductService productService;
+    int attempt = 0;
 
-    public InventoryServiceImpl(InventoryRepository inventoryRepository, KafkaTemplate kafkaTemplate, ProductService productService) {
+    public InventoryServiceImpl(InventoryRepository inventoryRepository, ProductService productService) {
         this.inventoryRepository = inventoryRepository;
-        this.kafkaTemplate = kafkaTemplate;
         this.productService = productService;
     }
 
@@ -34,6 +33,7 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override
+    @CircuitBreaker(name = "companyBreaker", fallbackMethod = "companyBreakerFallback")
     public InventoryResponse add(InventoryRequest inventoryRequest) {
         log.info("Inventory add: {}", inventoryRequest);
         //Check if product exists
@@ -60,6 +60,7 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override
+    @CircuitBreaker(name = "companyBreaker", fallbackMethod = "companyBreakerFallback")
     public InventoryResponse update(String id, InventoryRequest inventoryRequest) {
         log.info("Inventory update by id: {}, InventoryRequest: {}", id, inventoryRequest);
         Inventory inventory = InventoryRequestMapper.toInventory(inventoryRequest);
@@ -78,5 +79,9 @@ public class InventoryServiceImpl implements InventoryService{
         log.info("Inventory delete by id: {}", id);
         inventoryRepository.deleteById(id);
         return true;
+    }
+
+    public InventoryResponse companyBreakerFallback (Exception e){
+        return new InventoryResponse(null, null, 0,0L);
     }
 }

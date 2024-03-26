@@ -4,14 +4,9 @@ server:
 spring:
   application:
     name: inventory-service
-  profiles:
-    active: ${SPRING_PROFILE:default}
   data:
     mongodb:
-      uri: ${MONGO_URI:mongodb://username:password@localhost:27017/admin}
-  kafka:
-    consumer:
-      bootstrap-servers: ${KAFKA_URL:localhost:9092}
+      uri: ${MONGO_URI:mongodb://username:password@mongo_db:27017/admin}
 
 management:
   endpoints:
@@ -29,12 +24,12 @@ management:
       enabled: true
   zipkin:
     tracing:
-      endpoint: ${ZIPKIN_URL:http://localhost:9411/api/v2/spans}
+      endpoint: ${ZIPKIN_URL:http://zipkin:9411/api/v2/spans}
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${DISCOVERY_SERVER_URL:http://localhost:8761/eureka}
+      defaultZone: ${DISCOVERY_SERVER_URL:http://discovery-server:8761/eureka}
 resilience4j:
   circuitbreaker:
     instances:

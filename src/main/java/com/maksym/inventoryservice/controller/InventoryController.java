@@ -5,6 +5,7 @@ import com.maksym.inventoryservice.dto.InventoryResponse;
 import com.maksym.inventoryservice.model.Inventory;
 import com.maksym.inventoryservice.service.InventoryService;
 import com.maksym.inventoryservice.service.InventoryServiceImpl;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
